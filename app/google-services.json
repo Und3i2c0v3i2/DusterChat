@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "261064516818",
+    "firebase_url": "https://duster-chat-app.firebaseio.com",
+    "project_id": "duster-chat-app",
+    "storage_bucket": "duster-chat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261064516818:android:6243a48841b58da722f90b",
+        "android_client_info": {
+          "package_name": "practice.und3i2c0v3i2.dusterchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "261064516818-9i1t8uo7qfc86aavm6q8pae61lpca5lq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "practice.und3i2c0v3i2.dusterchat",
+            "certificate_hash": "cad015d5185a4e0eb70bf62658fcaa68f330191e"
+          }
+        },
+        {
+          "client_id": "261064516818-09cdku38sboprq6fbcnipamf2noitsao.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoGqU9NpdBeUDPkWdUsVRny7UHKX_KlLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "261064516818-09cdku38sboprq6fbcnipamf2noitsao.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data class="ActivityPhoneLoginBinding">
+
+        <variable
+            name="loginHandler"
+            type="practice.und3i2c0v3i2.dusterchat.PhoneLoginActivity" />
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginBottom="96dp"
+                android:src="@drawable/log_in" />
+
+            <EditText
+                android:id="@+id/phone_number_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. +123456789"
+                android:inputType="phone"
+                android:textAlignment="center"
+                style="@style/EditText"/>
+
+            <EditText
+                android:id="@+id/phone_verifiation_code_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="enter verification code"
+                android:textAlignment="center"
+                style="@style/EditText"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_send_verification_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> loginHandler.sendVerificationCode()}"
+                android:text="send verification code"
+                style="@style/Button"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_verify_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> loginHandler.verifyCode()}"
+                android:text="verify"
+                style="@style/Button"/>
+
+
+            <TextView
+                android:id="@+id/create_account_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> loginHandler.sendUserToLoginPage()}"
+                android:text="Log in with e-mail"
+                style="@style/TextLinks" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>
