@@ -6,6 +6,8 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorAccent">#FFC107</color>
     <color name="colorPink">#FF4081</color>
+    <color name="colorGrey">#B2979797</color>
+    <color name="colorLightGrey">#F3F3F3</color>
 
 
 <!--    <color name="primary">#9E9E9E</color>-->

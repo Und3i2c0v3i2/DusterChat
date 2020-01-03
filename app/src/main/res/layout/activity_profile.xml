@@ -6,7 +6,7 @@
 
     <data>
 
-        <import type="practice.und3i2c0v3i2.dusterchat.ProfileInfoBindingAdapter"/>
+        <import type="practice.und3i2c0v3i2.dusterchat.ProfileInfoBindingAdapter" />
 
         <variable
             name="rootRef"
@@ -21,82 +21,73 @@
             type="practice.und3i2c0v3i2.dusterchat.ProfileActivity" />
     </data>
 
-
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <include
+            android:id="@+id/profile_toolbar"
+            layout="@layout/appbar_layout" />
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ProfileActivity">
+            android:layout_height="match_parent">
 
-            <include
-                android:id="@+id/profile_toolbar"
-                layout="@layout/appbar_layout" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_below="@id/profile_toolbar"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="48dp"
-                android:layout_marginBottom="48dp"
-                android:src="@drawable/ic_profile_img_holder"
-                app:civ_border_color="@color/colorPrimaryDark"
-                app:civ_border_width="1dp"
-                app:civ_circle_background_color="@color/colorPrimary"/>
-
-            <EditText
-                android:id="@+id/profile_username"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/profile_image"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/inputs"
-                android:hint="Username"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                profile_username_rootRef="@{rootRef}"
-                profile_username_uid="@{auth.currentUser.uid.toString()}"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/profile_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/profile_username"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/inputs"
-                android:hint="Status"
-                android:inputType="textMultiLine"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                profile_status_rootRef="@{rootRef}"
-                profile_status_uid="@{auth.currentUser.uid.toString()}"/>
+                <include
+                    android:id="@+id/profile_info_header_layout"
+                    layout="@layout/profile_info_header_layout" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_edit_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@id/profile_status"
-                android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:enabled="true"
-                android:onClick="@{() -> profileHandler.updateProfile()}"
-                android:text="Update"
-                android:textColor="@color/colorPrimaryDark"
-                app:rippleColor="@color/colorPrimary"/>
+                <include
+                    android:id="@+id/profile_info_personal_layout"
+                    layout="@layout/profile_info_personal_layout" />
 
-        </RelativeLayout>
+                <include
+                    android:id="@+id/profile_info_social_layout"
+                    layout="@layout/profile_info_social_layout" />
 
-    </androidx.core.widget.NestedScrollView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_update_profile"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="4dp"
+                        android:onClick="@{() -> profileHandler.updateProfile()}"
+                        android:text="Update"
+                        android:textColor="@color/colorPrimaryDark"
+                        app:rippleColor="@color/colorPrimary" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_cancel_update"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="4dp"
+                        android:text="Cancel"
+                        android:textColor="@color/colorPrimaryDark"
+                        app:rippleColor="@color/colorPrimary"
+                        android:onClick="@{() -> profileHandler.finishProfileUpdate()}"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
 </layout>

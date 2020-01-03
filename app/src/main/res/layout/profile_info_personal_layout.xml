@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="practice.und3i2c0v3i2.dusterchat.ProfileInfoBindingAdapter" />
+
+        <variable
+            name="rootRef"
+            type="com.google.firebase.database.DatabaseReference" />
+
+        <variable
+            name="auth"
+            type="com.google.firebase.auth.FirebaseAuth" />
+
+        <variable
+            name="profileHandler"
+            type="practice.und3i2c0v3i2.dusterchat.ProfileActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="6"
+                android:text="Personal" />
+
+            <ImageView
+                android:id="@+id/btn_edit_profile_personal"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_edit"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:onClick="@{() -> profileHandler.editPersonal()}"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorGrey" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Phone"
+            android:textColor="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/display_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            profile_phone_rootRef="@{rootRef}"
+            profile_phone_uid="@{auth.currentUser.uid.toString()}"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="E-mail"
+            android:textColor="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/display_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            profile_phone_rootRef="@{rootRef}"
+            profile_phone_uid="@{auth.currentUser.uid.toString()}"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Web"
+            android:textColor="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/display_web"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            profile_web_rootRef="@{rootRef}"
+            profile_web_uid="@{auth.currentUser.uid.toString()}"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</layout>
