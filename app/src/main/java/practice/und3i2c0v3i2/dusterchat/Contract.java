@@ -5,6 +5,7 @@ public interface Contract {
     public static final String USERS = "users";
     public static final String GROUPS = "groups";
     public static final String PROFILE_IMAGES = "profile_images";
+    public static final String FRIEND_ID = "FRIEND_ID";
 
     /* profile */
     public static final String UID = "uid";

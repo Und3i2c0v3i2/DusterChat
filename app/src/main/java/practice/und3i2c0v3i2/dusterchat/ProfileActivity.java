@@ -264,6 +264,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Uri> task) {
                                                     if(task.isSuccessful()) {
                                                         user.setImgUrl(task.getResult().toString());
+                                                        updateProfile();
                                                     }
                                                 }
                                             });

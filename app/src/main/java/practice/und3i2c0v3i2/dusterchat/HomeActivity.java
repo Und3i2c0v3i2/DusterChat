@@ -111,9 +111,14 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
     }
 
     private void openGroupChatPage(String groupName) {
-        Intent profileIntent = new Intent(this, GroupChatActivity.class);
-        profileIntent.putExtra(BUNDLE_GROUP_NAME, groupName);
-        startActivity(profileIntent);
+        Intent groupIntent = new Intent(this, GroupChatActivity.class);
+        groupIntent.putExtra(BUNDLE_GROUP_NAME, groupName);
+        startActivity(groupIntent);
+    }
+
+    private void openFindFriendsPage() {
+        Intent friendsIntent = new Intent(this, FindFriendsActivity.class);
+        startActivity(friendsIntent);
     }
 
 
@@ -137,6 +142,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
         switch (item.getItemId()) {
 
             case R.id.menu_friends:
+                openFindFriendsPage();
                 return true;
 
             case R.id.menu_profile:
