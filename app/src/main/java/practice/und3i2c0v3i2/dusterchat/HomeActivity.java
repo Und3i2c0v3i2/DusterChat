@@ -26,7 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
-import practice.und3i2c0v3i2.dusterchat.databinding.ActivityMainBinding;
+
+import practice.und3i2c0v3i2.dusterchat.databinding.ActivityHomeBinding;
 
 import static practice.und3i2c0v3i2.dusterchat.Contract.GROUPS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
@@ -40,7 +41,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
 
     private FirebaseUser currentUser;
     private FirebaseAuth auth;
-    private ActivityMainBinding binding;
+    private ActivityHomeBinding binding;
     private DatabaseReference rootRef;
 
     String groupName;
@@ -49,7 +50,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
         setSupportActionBar(binding.mainToolbar.toolbar);
         Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);

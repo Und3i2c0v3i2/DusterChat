@@ -3,15 +3,10 @@
 
     <data>
 
-        <import type="practice.und3i2c0v3i2.dusterchat.ProfileInfoBindingAdapter" />
-
         <variable
-            name="rootRef"
-            type="com.google.firebase.database.DatabaseReference" />
+            name="user"
+            type="practice.und3i2c0v3i2.dusterchat.model.User" />
 
-        <variable
-            name="auth"
-            type="com.google.firebase.auth.FirebaseAuth" />
 
         <variable
             name="profileHandler"
@@ -66,6 +61,7 @@
 
         <EditText
             android:id="@+id/display_phone"
+            android:text="@={user.phone}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -73,8 +69,6 @@
             android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
             android:enabled="false"
-            profile_phone_rootRef="@{rootRef}"
-            profile_phone_uid="@{auth.currentUser.uid.toString()}"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"/>
 
@@ -88,6 +82,7 @@
 
         <EditText
             android:id="@+id/display_email"
+            android:text="@={user.email}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -95,8 +90,6 @@
             android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
             android:enabled="false"
-            profile_phone_rootRef="@{rootRef}"
-            profile_phone_uid="@{auth.currentUser.uid.toString()}"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp" />
 
@@ -110,6 +103,7 @@
 
         <EditText
             android:id="@+id/display_web"
+            android:text="@={user.web}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -117,8 +111,6 @@
             android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
             android:enabled="false"
-            profile_web_rootRef="@{rootRef}"
-            profile_web_uid="@{auth.currentUser.uid.toString()}"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp" />
 

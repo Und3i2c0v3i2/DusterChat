@@ -6,16 +6,6 @@
 
     <data>
 
-        <import type="practice.und3i2c0v3i2.dusterchat.ProfileInfoBindingAdapter" />
-
-        <variable
-            name="rootRef"
-            type="com.google.firebase.database.DatabaseReference" />
-
-        <variable
-            name="auth"
-            type="com.google.firebase.auth.FirebaseAuth" />
-
         <variable
             name="profileHandler"
             type="practice.und3i2c0v3i2.dusterchat.ProfileActivity" />

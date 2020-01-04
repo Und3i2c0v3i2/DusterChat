@@ -4,12 +4,13 @@ public interface Contract {
 
     public static final String USERS = "users";
     public static final String GROUPS = "groups";
+    public static final String PROFILE_IMAGES = "profile_images";
 
     /* profile */
     public static final String UID = "uid";
     public static final String USERNAME = "username";
     public static final String STATUS = "status";
-    public static final String PICTURE = "picture";
+    public static final String PROFILE_IMG = "profile_img";
 
     /* personal */
     public static final String PHONE = "phone";

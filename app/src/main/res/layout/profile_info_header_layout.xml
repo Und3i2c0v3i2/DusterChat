@@ -6,15 +6,9 @@
 
     <data>
 
-        <import type="practice.und3i2c0v3i2.dusterchat.ProfileInfoBindingAdapter" />
-
         <variable
-            name="rootRef"
-            type="com.google.firebase.database.DatabaseReference" />
-
-        <variable
-            name="auth"
-            type="com.google.firebase.auth.FirebaseAuth" />
+            name="user"
+            type="practice.und3i2c0v3i2.dusterchat.model.User" />
 
         <variable
             name="profileHandler"
@@ -26,7 +20,6 @@
         android:id="@+id/gradient_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profile_toolbar"
         android:layout_marginBottom="16dp">
 
         <View
@@ -36,23 +29,24 @@
 
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
-            app:civ_border_color="@color/colorWhite"
+            android:id="@+id/display_profile_image"
+            load_image="@{user.imgUrl}"
+            app:civ_border_color="@color/colorGrey"
             app:civ_border_width="1dp"
             app:civ_circle_background_color="@color/colorPrimary"
-            tools:src="@drawable/profile"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="8dp"
             android:elevation="1dp"
-            android:src="@drawable/ic_profile_img_holder" />
+            android:src="@drawable/profile_pic_holder_foreground"
+            android:onClick="@{() -> profileHandler.selectImage()}"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/profile_image"
+            android:layout_below="@id/display_profile_image"
             android:layout_marginStart="85dp"
             android:layout_marginEnd="85dp"
             android:background="@color/colorGrey"
@@ -85,13 +79,11 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
                         android:background="@drawable/ic_edit"
-                        android:backgroundTint="@color/colorPrimaryDark"
                         android:onClick="@{() -> profileHandler.editProfile()}"/>
 
                     <EditText
                         android:id="@+id/display_username"
-                        profile_username_rootRef="@{rootRef}"
-                        profile_username_uid="@{auth.currentUser.uid.toString()}"
+                        android:text="@={user.username}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/profile_image"
@@ -100,15 +92,13 @@
                         android:layout_marginEnd="16dp"
                         android:background="@android:color/transparent"
                         android:enabled="false"
-                        android:text="Your username"
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="22sp" />
 
                     <EditText
                         android:id="@+id/display_status"
-                        profile_username_rootRef="@{rootRef}"
-                        profile_username_uid="@{auth.currentUser.uid.toString()}"
+                        android:text="@={user.status}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -117,7 +107,6 @@
                         android:background="@android:color/transparent"
                         android:enabled="false"
                         android:maxLines="2"
-                        android:text="Your status\nhere"
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="14sp" />

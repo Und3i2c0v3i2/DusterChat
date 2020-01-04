@@ -1,11 +1,14 @@
 package practice.und3i2c0v3i2.dusterchat;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,16 +23,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityProfileBinding;
+import practice.und3i2c0v3i2.dusterchat.model.User;
 
 import static practice.und3i2c0v3i2.dusterchat.Contract.EMAIL;
 import static practice.und3i2c0v3i2.dusterchat.Contract.FACEBOOK;
 import static practice.und3i2c0v3i2.dusterchat.Contract.LINKED_IN;
 import static practice.und3i2c0v3i2.dusterchat.Contract.PHONE;
+import static practice.und3i2c0v3i2.dusterchat.Contract.PROFILE_IMAGES;
+import static practice.und3i2c0v3i2.dusterchat.Contract.PROFILE_IMG;
 import static practice.und3i2c0v3i2.dusterchat.Contract.STATUS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.TWITTER;
 import static practice.und3i2c0v3i2.dusterchat.Contract.UID;
@@ -39,20 +50,18 @@ import static practice.und3i2c0v3i2.dusterchat.Contract.WEB_PAGE;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private static final int GALLERY_REQ_CODE = 3000;
+
     private ActivityProfileBinding binding;
+
     private FirebaseAuth auth;
     private DatabaseReference rootRef;
-    private String currentUID;
-    private String username;
-    private String status;
-    private String phone;
-    private String email;
-    private String web;
-    private String linkedIn;
-    private String facebook;
-    private String twitter;
-    private InputMethodManager inputMethodManager;
+    private StorageReference profileImgRef;
 
+    private User user;
+
+    private InputMethodManager inputMethodManager;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -68,28 +77,25 @@ public class ProfileActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
+        profileImgRef = FirebaseStorage.getInstance().getReference().child(PROFILE_IMAGES);
 
-        binding.setAuth(auth);
-        binding.setRootRef(rootRef);
-        binding.profileInfoHeaderLayout.setAuth(auth);
-        binding.profileInfoHeaderLayout.setRootRef(rootRef);
-        binding.profileInfoPersonalLayout.setAuth(auth);
-        binding.profileInfoPersonalLayout.setRootRef(rootRef);
-        binding.profileInfoSocialLayout.setAuth(auth);
-        binding.profileInfoSocialLayout.setRootRef(rootRef);
-        currentUID = Objects.requireNonNull(auth.getCurrentUser()).getUid();
+        user = new User();
+        user.setUid(auth.getCurrentUser().getUid());
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        progressDialog = new ProgressDialog(this);
 
         setSupportActionBar(binding.profileToolbar.toolbar);
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getString(R.string.title_activity_profile));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
         getProfileInfo();
 
         binding.btnUpdateProfile.setVisibility(View.INVISIBLE);
         binding.btnCancelUpdate.setVisibility(View.INVISIBLE);
+        binding.profileInfoHeaderLayout.displayProfileImage.setEnabled(false);
     }
 
 
@@ -106,7 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void getProfileInfo() {
 
         rootRef.child(USERS)
-                .child(currentUID)
+                .child(user.getUid())
                 .addValueEventListener(valueEventListener);
 
     }
@@ -118,6 +124,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         binding.profileInfoHeaderLayout.displayUsername.setEnabled(false);
         binding.profileInfoHeaderLayout.displayStatus.setEnabled(false);
+        binding.profileInfoHeaderLayout.displayProfileImage.setEnabled(false);
 
         binding.profileInfoPersonalLayout.displayPhone.setEnabled(false);
         binding.profileInfoPersonalLayout.displayEmail.setEnabled(false);
@@ -134,11 +141,20 @@ public class ProfileActivity extends AppCompatActivity {
 
         binding.profileInfoHeaderLayout.displayUsername.setEnabled(true);
         binding.profileInfoHeaderLayout.displayStatus.setEnabled(true);
+        binding.profileInfoHeaderLayout.displayProfileImage.setEnabled(true);
 
         binding.profileInfoHeaderLayout.displayUsername.requestFocus();
         binding.profileInfoHeaderLayout.displayUsername.setSelection(binding.profileInfoHeaderLayout.displayUsername.getText().length());
         inputMethodManager.showSoftInput(binding.profileInfoHeaderLayout.displayUsername, InputMethodManager.SHOW_IMPLICIT);
     }
+
+    public void selectImage() {
+        Intent galleryIntent = new Intent();
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, GALLERY_REQ_CODE);
+    }
+
 
     public void editPersonal() {
         binding.btnUpdateProfile.setVisibility(View.VISIBLE);
@@ -153,6 +169,7 @@ public class ProfileActivity extends AppCompatActivity {
         inputMethodManager.showSoftInput(binding.profileInfoPersonalLayout.displayPhone, InputMethodManager.SHOW_IMPLICIT);
 
     }
+
 
     public void editSocial() {
         binding.btnUpdateProfile.setVisibility(View.VISIBLE);
@@ -169,27 +186,26 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void updateProfile() {
 
-        getUserInputs();
-
-
-        if (username.isEmpty()) {
+        if (user.getUsername().isEmpty()) {
             Toast.makeText(this, "Username cannot be empty", Toast.LENGTH_SHORT).show();
 
         } else {
 
             HashMap<String, String> profileInfo = new HashMap<>();
-            profileInfo.put(UID, currentUID);
-            profileInfo.put(USERNAME, username);
-            profileInfo.put(STATUS, status);
-            profileInfo.put(PHONE, phone);
-            profileInfo.put(EMAIL, email);
-            profileInfo.put(WEB_PAGE, web);
-            profileInfo.put(LINKED_IN, linkedIn);
-            profileInfo.put(FACEBOOK, facebook);
-            profileInfo.put(TWITTER, twitter);
+            profileInfo.put(PROFILE_IMG, user.getImgUrl());
+            profileInfo.put(UID, user.getUid());
+            profileInfo.put(USERNAME, user.getUsername());
+            profileInfo.put(STATUS, user.getStatus());
+            profileInfo.put(PHONE, user.getPhone());
+            profileInfo.put(EMAIL, user.getEmail());
+            profileInfo.put(WEB_PAGE, user.getWeb());
+            profileInfo.put(LINKED_IN, user.getLinkedIn());
+            profileInfo.put(FACEBOOK, user.getFacebook());
+            profileInfo.put(TWITTER, user.getTwitter());
+
 
             rootRef.child(USERS)
-                    .child(currentUID)
+                    .child(user.getUid())
                     .setValue(profileInfo)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -206,81 +222,122 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    private void getUserInputs() {
 
-        username = binding.profileInfoHeaderLayout.displayUsername.getText().toString();
-        status = binding.profileInfoHeaderLayout.displayStatus.getText().toString();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        phone = binding.profileInfoPersonalLayout.displayPhone.getText().toString();
-        email = binding.profileInfoPersonalLayout.displayEmail.getText().toString();
-        web = binding.profileInfoPersonalLayout.displayWeb.getText().toString();
+        if (resultCode == RESULT_OK && requestCode == GALLERY_REQ_CODE && data != null) {
 
-        linkedIn = binding.profileInfoSocialLayout.displayLinkedIn.getText().toString();
-        facebook = binding.profileInfoSocialLayout.displayFacebook.getText().toString();
-        twitter = binding.profileInfoSocialLayout.displayTwitter.getText().toString();
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1, 1)
+                    .start(this);
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if (resultCode == RESULT_OK) {
+
+                progressDialog.setTitle("Setting profile image");
+                progressDialog.setMessage("Your profile image is updating, please wait");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                Uri resultUri = result.getUri();
+
+
+                StorageReference storageReference = profileImgRef.child(user.getUid() + ".jpg");
+                storageReference.putFile(resultUri)
+                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                                if (task.isSuccessful()) {
+
+                                    task.getResult()
+                                            .getStorage()
+                                            .getDownloadUrl()
+                                            .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Uri> task) {
+                                                    if(task.isSuccessful()) {
+                                                        user.setImgUrl(task.getResult().toString());
+                                                    }
+                                                }
+                                            });
+
+                                    rootRef.child(USERS)
+                                            .child(user.getUid())
+                                            .child(PROFILE_IMG)
+                                            .setValue(user.getImgUrl())
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+
+                                                    if (task.isSuccessful()) {
+                                                        updateProfile();
+                                                        progressDialog.dismiss();
+                                                    }
+                                                }
+                                            });
+
+                                    updateProfile();
+                                }
+                            }
+                        });
+            }
+
+        }
+
+
     }
-
 
     private ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-            if(dataSnapshot.exists() && dataSnapshot.hasChild(USERNAME)) {
-                username = dataSnapshot.child(USERNAME).getValue().toString();
-            } else {
-                username = "";
+            if (dataSnapshot.exists() && dataSnapshot.hasChild(PROFILE_IMG)) {
+                user.setImgUrl(dataSnapshot.child(PROFILE_IMG).getValue().toString());
             }
 
-            if(dataSnapshot.exists() && dataSnapshot.hasChild(STATUS)) {
-                status = dataSnapshot.child(STATUS).getValue().toString();
-            } else {
-                status = "--";
+            if (dataSnapshot.exists() && dataSnapshot.hasChild(USERNAME)) {
+                user.setUsername(dataSnapshot.child(USERNAME).getValue().toString());
             }
 
-            if(dataSnapshot.exists() && dataSnapshot.hasChild(PHONE)) {
-                phone = dataSnapshot.child(PHONE).getValue().toString();
-            } else {
-                phone = "--";
+            if (dataSnapshot.exists() && dataSnapshot.hasChild(STATUS)) {
+                user.setStatus(dataSnapshot.child(STATUS).getValue().toString());
             }
 
-            if(dataSnapshot.exists() && dataSnapshot.hasChild(EMAIL)) {
-                email = dataSnapshot.child(EMAIL).getValue().toString();
-            } else {
-                email = "--";
+            if (dataSnapshot.exists() && dataSnapshot.hasChild(PHONE)) {
+                user.setPhone(dataSnapshot.child(PHONE).getValue().toString());
             }
 
-            if(dataSnapshot.exists() && dataSnapshot.hasChild(WEB_PAGE)) {
-                web = dataSnapshot.child(WEB_PAGE).getValue().toString();
-            } else {
-                web = "--";
+            if (dataSnapshot.exists() && dataSnapshot.hasChild(EMAIL)) {
+                user.setEmail(dataSnapshot.child(EMAIL).getValue().toString());
             }
 
-            if(dataSnapshot.exists() && dataSnapshot.hasChild(LINKED_IN)) {
-                linkedIn = dataSnapshot.child(LINKED_IN).getValue().toString();
-            } else {
-                linkedIn = "--";
+            if (dataSnapshot.exists() && dataSnapshot.hasChild(WEB_PAGE)) {
+                user.setWeb(dataSnapshot.child(WEB_PAGE).getValue().toString());
             }
 
-            if(dataSnapshot.exists() && dataSnapshot.hasChild(FACEBOOK)) {
-                facebook = dataSnapshot.child(FACEBOOK).getValue().toString();
-            } else {
-                facebook = "--";
+            if (dataSnapshot.exists() && dataSnapshot.hasChild(LINKED_IN)) {
+                user.setLinkedIn(dataSnapshot.child(LINKED_IN).getValue().toString());
             }
 
-            if(dataSnapshot.exists() && dataSnapshot.hasChild(TWITTER)) {
-                twitter = dataSnapshot.child(TWITTER).getValue().toString();
-            } else {
-                twitter = "--";
+            if (dataSnapshot.exists() && dataSnapshot.hasChild(FACEBOOK)) {
+                user.setFacebook(dataSnapshot.child(FACEBOOK).getValue().toString());
             }
 
-            binding.profileInfoHeaderLayout.displayUsername.setText(username);
-            binding.profileInfoHeaderLayout.displayStatus.setText(status);
-            binding.profileInfoPersonalLayout.displayPhone.setText(phone);
-            binding.profileInfoPersonalLayout.displayEmail.setText(email);
-            binding.profileInfoPersonalLayout.displayWeb.setText(web);
-            binding.profileInfoSocialLayout.displayLinkedIn.setText(linkedIn);
-            binding.profileInfoSocialLayout.displayFacebook.setText(facebook);
-            binding.profileInfoSocialLayout.displayTwitter.setText(twitter);
+            if (dataSnapshot.exists() && dataSnapshot.hasChild(TWITTER)) {
+                user.setTwitter(dataSnapshot.child(TWITTER).getValue().toString());
+            }
+
+            binding.profileInfoHeaderLayout.setUser(user);
+            binding.profileInfoPersonalLayout.setUser(user);
+            binding.profileInfoSocialLayout.setUser(user);
+
         }
 
         @Override
