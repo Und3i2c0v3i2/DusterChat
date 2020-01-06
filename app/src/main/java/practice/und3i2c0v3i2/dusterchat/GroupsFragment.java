@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,30 +72,31 @@ public class GroupsFragment extends Fragment {
     }
 
     private void displayGroups() {
-
-        groupRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                Set<String> set = new HashSet<>();
-                Iterator iterator = dataSnapshot.getChildren().iterator();
-
-                while ((iterator.hasNext())) {
-                    set.add(((DataSnapshot)iterator.next()).getKey());
-                }
-
-                list.clear();
-                list.addAll(set);
-                adapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        groupRef.addValueEventListener(groupsEventListener);
     }
+
+    private ValueEventListener groupsEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            Set<String> set = new HashSet<>();
+            Iterator iterator = dataSnapshot.getChildren().iterator();
+
+            while ((iterator.hasNext())) {
+                set.add(((DataSnapshot)iterator.next()).getKey());
+            }
+
+            list.clear();
+            list.addAll(set);
+            adapter.notifyDataSetChanged();
+
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -105,4 +105,18 @@ public class GroupsFragment extends Fragment {
             listener = (OnItemClickListener) context;
         }
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if(listener != null) {
+            listener = null;
+        }
+
+        if(groupsEventListener != null) {
+            groupRef.removeEventListener(groupsEventListener);
+        }
+
+    }
+
 }

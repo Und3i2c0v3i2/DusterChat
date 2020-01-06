@@ -1,11 +1,27 @@
 package practice.und3i2c0v3i2.dusterchat.model;
 
+import androidx.annotation.StringDef;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
 
 public class User extends BaseObservable {
+
+    @StringDef({
+            ConnStatus.NEW_REQ,
+            ConnStatus.SENT_REQ,
+            ConnStatus.RECEIVED_REQ,
+            ConnStatus.ACCEPTED_REQ,
+            ConnStatus.REJECTED_REQ})
+    public @interface ConnStatus {
+        String NEW_REQ = "new request";
+        String SENT_REQ = "sent request";
+        String RECEIVED_REQ = "received request";
+        String ACCEPTED_REQ = "accepted request";
+        String REJECTED_REQ = "rejected request";
+    }
+
 
     private String uid;
     private String username;

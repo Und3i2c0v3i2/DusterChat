@@ -163,13 +163,6 @@ public class GroupChatActivity extends AppCompatActivity implements ChatListener
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        groupMsgRef.removeEventListener(childEventListener);
-        usersRef.removeEventListener(valueEventListener);
-
-    }
 
     private ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
@@ -220,5 +213,17 @@ public class GroupChatActivity extends AppCompatActivity implements ChatListener
         }
     };
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(valueEventListener != null) {
+            usersRef.child(uId)
+                    .removeEventListener(valueEventListener);
+        }
+        if(childEventListener != null) {
+            groupRef.removeEventListener(childEventListener);
+        }
+
+    }
 
 }

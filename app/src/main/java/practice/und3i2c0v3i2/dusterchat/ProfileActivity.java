@@ -30,7 +30,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityProfileBinding;
 import practice.und3i2c0v3i2.dusterchat.model.User;
@@ -113,7 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         rootRef.child(USERS)
                 .child(user.getUid())
-                .addValueEventListener(valueEventListener);
+                .addValueEventListener(userProfileEventListener);
 
     }
 
@@ -295,7 +294,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    private ValueEventListener valueEventListener = new ValueEventListener() {
+    private ValueEventListener userProfileEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -347,13 +346,19 @@ public class ProfileActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(userProfileEventListener != null) {
+            rootRef.child(USERS)
+                    .child(user.getUid())
+                    .removeEventListener(userProfileEventListener);
+        }
+    }
 
     @Override
     protected void onDestroy() {
-
-        rootRef.removeEventListener(valueEventListener);
-        rootRef = null;
-        auth = null;
         super.onDestroy();
+        progressDialog.dismiss();
     }
 }

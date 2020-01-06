@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -67,6 +69,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull FindFriendsViewHolder holder, final int position, @NonNull Contacts model) {
 
+
                         holder.username.setText(model.getUsername());
                         holder.status.setText(model.getStatus());
 
@@ -79,6 +82,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 String uidKey = getRef(position).getKey();
+                                Log.d("TAG", uidKey);
                                 Intent profileIntent = new Intent(FindFriendsActivity.this, FriendProfileActivity.class);
                                 profileIntent.putExtra(FRIEND_ID, uidKey);
                                 startActivity(profileIntent);

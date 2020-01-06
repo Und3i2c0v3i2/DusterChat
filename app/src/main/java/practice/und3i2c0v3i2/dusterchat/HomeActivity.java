@@ -30,6 +30,7 @@ import java.util.Objects;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityHomeBinding;
 
 import static practice.und3i2c0v3i2.dusterchat.Contract.GROUPS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.UID;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERS;
 
@@ -44,7 +45,8 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
     private ActivityHomeBinding binding;
     private DatabaseReference rootRef;
 
-    String groupName;
+    private String groupName;
+    private String uId;
 
 
     @Override
@@ -79,24 +81,11 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
 
     private void verifyUser() {
 
-        String UID = auth.getCurrentUser().getUid();
+        uId = auth.getCurrentUser().getUid();
+
         rootRef.child(USERS)
-                .child(UID)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // if user already setup his profile
-                        if (!dataSnapshot.child(USERNAME).exists()) {
-                            openProfilePage();
-                            Toast.makeText(HomeActivity.this, "Please set up your username", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                .child(uId)
+                .addValueEventListener(verifyUserEventListener);
     }
 
 
@@ -174,7 +163,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         String name = groupName.getText().toString();
-                        if(name.isEmpty()) {
+                        if (name.isEmpty()) {
                             Toast.makeText(HomeActivity.this, "Please enter a Group name", Toast.LENGTH_LONG).show();
                         } else {
                             createNewGroup(name);
@@ -200,7 +189,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
                             Toast.makeText(HomeActivity.this, groupName + " group is successfully created", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -220,4 +209,32 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
                 break;
         }
     }
+
+    private ValueEventListener verifyUserEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            // if user already setup his profile
+            if (!dataSnapshot.child(USERNAME).exists()) {
+                openProfilePage();
+                Toast.makeText(HomeActivity.this, "Please set up your username", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(verifyUserEventListener != null) {
+            rootRef.child(USERS)
+                    .child(uId)
+                    .removeEventListener(verifyUserEventListener);
+        }
+    }
+
 }

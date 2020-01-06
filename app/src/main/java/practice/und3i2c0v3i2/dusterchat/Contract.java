@@ -5,7 +5,11 @@ public interface Contract {
     public static final String USERS = "users";
     public static final String GROUPS = "groups";
     public static final String PROFILE_IMAGES = "profile_images";
-    public static final String FRIEND_ID = "FRIEND_ID";
+    public static final String FRIEND_ID = "friend_id";
+    public static final String CHAT_REQUESTS = "chat_requests";
+    public static final String REQ_STATUS = "request_status";
+    public static final String STATUS_SENT = "sent_req";
+    public static final String STATUS_RECEIVED = "received_req";
 
     /* profile */
     public static final String UID = "uid";
