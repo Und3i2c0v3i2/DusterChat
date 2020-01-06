@@ -179,7 +179,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="24dp"
                     android:layout_marginBottom="24dp"
-                    android:text="send message request"
+                    android:text="send chat request"
                     android:onClick="@{() -> profileHandler.sendChatRequest()}"
                     android:visibility="invisible"/>
 

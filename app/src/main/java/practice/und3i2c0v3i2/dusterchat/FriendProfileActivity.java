@@ -77,7 +77,13 @@ public class FriendProfileActivity extends AppCompatActivity {
         }
 
 
+//        if(currentReqStatus == null) {
         currentReqStatus = User.ConnStatus.NEW_REQ;
+//        }
+
+        chatReqRef.child(STATUS_SENT)
+                .child(currentUserId)
+                .addValueEventListener(chatValueEventListener);
 
         user = new User();
         binding.setProfileHandler(this);
@@ -104,10 +110,6 @@ public class FriendProfileActivity extends AppCompatActivity {
 
     private void handleChatRequest() {
 
-        chatReqRef.child(STATUS_SENT)
-                .child(currentUserId)
-                .addValueEventListener(chatValueEventListener);
-
         if (currentReqStatus.equals(User.ConnStatus.NEW_REQ)) {
 
             chatReqRef.child(STATUS_SENT)
@@ -130,8 +132,8 @@ public class FriendProfileActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     binding.friendProfileInfoLayout.sendMsgRequest.setEnabled(true);
-                                                    binding.friendProfileInfoLayout.sendMsgRequest.setTextColor(getResources().getColor(R.color.design_default_color_primary_dark));
-                                                    binding.friendProfileInfoLayout.sendMsgRequest.setText("Cancel Request");
+                                                    binding.friendProfileInfoLayout.sendMsgRequest.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                                                    binding.friendProfileInfoLayout.sendMsgRequest.setText("Cancel Chat Request");
                                                     currentReqStatus = User.ConnStatus.SENT_REQ;
                                                 }
                                             }
@@ -139,8 +141,11 @@ public class FriendProfileActivity extends AppCompatActivity {
                             }
                         }
                     });
+        } else if (currentReqStatus.equals(User.ConnStatus.SENT_REQ)) {
+                cancelChatRequest();
         }
     }
+
 
     public void sendChatRequest() {
         if (!currentUserId.equals(receiverUserId)) {
@@ -149,6 +154,37 @@ public class FriendProfileActivity extends AppCompatActivity {
             binding.friendProfileInfoLayout.sendMsgRequest.setTextColor(getResources().getColor(R.color.colorGrey));
             handleChatRequest();
         }
+    }
+
+    private void cancelChatRequest() {
+
+        chatReqRef.child(STATUS_SENT)
+                .child(currentUserId)
+                .child(receiverUserId)
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            chatReqRef.child(STATUS_RECEIVED)
+                                    .child(receiverUserId)
+                                    .child(currentUserId)
+                                    .removeValue()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                binding.friendProfileInfoLayout.sendMsgRequest.setEnabled(true);
+                                                binding.friendProfileInfoLayout.sendMsgRequest.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                                                binding.friendProfileInfoLayout.sendMsgRequest.setText("Send Chat Request");
+                                                currentReqStatus = User.ConnStatus.NEW_REQ;
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+
     }
 
     private ValueEventListener friendProfileEventListener = new ValueEventListener() {
@@ -191,7 +227,7 @@ public class FriendProfileActivity extends AppCompatActivity {
                 user.setTwitter(dataSnapshot.child(TWITTER).getValue().toString());
             }
 
-//            handleChatRequest();
+
             binding.friendProfileInfoLayout.setUser(user);
             getSupportActionBar().setTitle(user.getUsername() + "'s profile");
 
@@ -207,12 +243,12 @@ public class FriendProfileActivity extends AppCompatActivity {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             if (dataSnapshot.hasChild(receiverUserId)) {
-                String reqStatus = dataSnapshot
+                currentReqStatus = dataSnapshot
                         .child(receiverUserId)
                         .child(REQ_STATUS)
                         .getValue().toString();
 
-                if (reqStatus.equals(User.ConnStatus.SENT_REQ)) {
+                if (currentReqStatus.equals(User.ConnStatus.SENT_REQ)) {
                     binding.friendProfileInfoLayout.sendMsgRequest.setText("Cancel Chat Request");
                 }
             }
@@ -230,13 +266,13 @@ public class FriendProfileActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        if(chatValueEventListener != null) {
+        if (chatValueEventListener != null) {
             chatReqRef.child(STATUS_SENT)
                     .child(currentUserId)
                     .removeEventListener(chatValueEventListener);
         }
 
-        if(friendProfileEventListener != null) {
+        if (friendProfileEventListener != null) {
             rootRef.child(receiverUserId)
                     .removeEventListener(friendProfileEventListener);
         }
