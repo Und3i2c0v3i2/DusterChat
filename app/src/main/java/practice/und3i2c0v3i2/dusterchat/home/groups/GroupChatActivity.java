@@ -1,4 +1,4 @@
-package practice.und3i2c0v3i2.dusterchat;
+package practice.und3i2c0v3i2.dusterchat.home.groups;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,14 +23,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import practice.und3i2c0v3i2.dusterchat.ChatListener;
+import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityGroupChatBinding;
 import practice.und3i2c0v3i2.dusterchat.util.UtilDateConverter;
 
-import static practice.und3i2c0v3i2.dusterchat.Contract.GROUPS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_GROUPS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.MESSAGE;
 import static practice.und3i2c0v3i2.dusterchat.Contract.TIMESTAMP;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
-import static practice.und3i2c0v3i2.dusterchat.Contract.USERS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 import static practice.und3i2c0v3i2.dusterchat.OnItemClickListener.BUNDLE_GROUP_NAME;
 
 public class GroupChatActivity extends AppCompatActivity implements ChatListener {
@@ -69,10 +71,10 @@ public class GroupChatActivity extends AppCompatActivity implements ChatListener
         auth = FirebaseAuth.getInstance();
         usersRef = FirebaseDatabase.getInstance()
                 .getReference()
-                .child(USERS);
+                .child(NODE_USERS);
         groupRef = FirebaseDatabase.getInstance()
                 .getReference()
-                .child(GROUPS)
+                .child(NODE_GROUPS)
                 .child(groupName);
         uId = auth.getCurrentUser().getUid();
 

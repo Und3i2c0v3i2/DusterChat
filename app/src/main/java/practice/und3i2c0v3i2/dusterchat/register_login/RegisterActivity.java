@@ -1,4 +1,4 @@
-package practice.und3i2c0v3i2.dusterchat;
+package practice.und3i2c0v3i2.dusterchat.register_login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +16,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityRegisterBinding;
+import practice.und3i2c0v3i2.dusterchat.home.HomeActivity;
 
-import static practice.und3i2c0v3i2.dusterchat.Contract.USERS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -30,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_register);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_register);
         binding.setLifecycleOwner(this);
         binding.setRegisterHandler(this);
 
@@ -69,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if(task.isSuccessful()) {
 
                                 String id = auth.getCurrentUser().getUid();
-                                rootRef.child(USERS).child(id).setValue("");
+                                rootRef.child(NODE_USERS).child(id).setValue("");
                                 sendUserToHomePage();
                             } else {
                                 String message = task.getException().getMessage().toString();

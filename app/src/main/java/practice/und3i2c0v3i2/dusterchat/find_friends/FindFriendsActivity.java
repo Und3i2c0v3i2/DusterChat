@@ -1,4 +1,4 @@
-package practice.und3i2c0v3i2.dusterchat;
+package practice.und3i2c0v3i2.dusterchat.find_friends;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,19 +18,22 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import practice.und3i2c0v3i2.dusterchat.model.User;
+import practice.und3i2c0v3i2.dusterchat.profile.ChatProfileActivity;
+import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityFindFriendsBinding;
 import practice.und3i2c0v3i2.dusterchat.databinding.UsersHolderBinding;
-import practice.und3i2c0v3i2.dusterchat.model.Contacts;
 
 import static practice.und3i2c0v3i2.dusterchat.Contract.FRIEND_ID;
-import static practice.und3i2c0v3i2.dusterchat.Contract.USERS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 
 public class FindFriendsActivity extends AppCompatActivity {
 
 
     private ActivityFindFriendsBinding friendsBinding;
     private DatabaseReference usersRef;
-    private FirebaseRecyclerAdapter<Contacts, FindFriendsViewHolder> adapter;
+    private FirebaseRecyclerAdapter<User, FindFriendsViewHolder> adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,8 @@ public class FindFriendsActivity extends AppCompatActivity {
 
         usersRef = FirebaseDatabase.getInstance()
                 .getReference()
-                .child(USERS);
+                .child(NODE_USERS);
+
 
         setSupportActionBar(friendsBinding.appbarLayout.toolbar);
         if (getSupportActionBar() != null) {
@@ -55,26 +58,25 @@ public class FindFriendsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        FirebaseRecyclerOptions<Contacts> firebaseRecyclerOptions =
-                new FirebaseRecyclerOptions.Builder<Contacts>()
-                        .setQuery(usersRef, Contacts.class)
+        FirebaseRecyclerOptions<User> firebaseRecyclerOptions =
+                new FirebaseRecyclerOptions.Builder<User>()
+                        .setQuery(usersRef, User.class)
                         .build();
 
         adapter =
-                new FirebaseRecyclerAdapter<Contacts, FindFriendsViewHolder>(firebaseRecyclerOptions) {
+                new FirebaseRecyclerAdapter<User, FindFriendsViewHolder>(firebaseRecyclerOptions) {
                     @Override
-                    protected void onBindViewHolder(@NonNull final FindFriendsViewHolder holder, final int position, @NonNull Contacts model) {
+                    protected void onBindViewHolder(@NonNull final FindFriendsViewHolder holder, final int position, @NonNull User model) {
 
-                        holder.binding.setContact(model);
+                        holder.binding.setUser(model);
 
                         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 String uidKey = getRef(holder.getAdapterPosition()).getKey();
-                                Intent profileIntent = new Intent(FindFriendsActivity.this, FriendProfileActivity.class);
+                                Intent profileIntent = new Intent(FindFriendsActivity.this, ChatProfileActivity.class);
                                 profileIntent.putExtra(FRIEND_ID, uidKey);
                                 startActivity(profileIntent);
-
                             }
                         });
 
@@ -126,7 +128,6 @@ public class FindFriendsActivity extends AppCompatActivity {
         public FindFriendsViewHolder(@NonNull UsersHolderBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-//            this.binding.getRoot().setOnClickListener();
         }
     }
 }

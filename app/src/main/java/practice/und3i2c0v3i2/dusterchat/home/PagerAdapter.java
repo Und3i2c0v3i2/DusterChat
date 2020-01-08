@@ -1,10 +1,14 @@
-package practice.und3i2c0v3i2.dusterchat;
+package practice.und3i2c0v3i2.dusterchat.home;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import practice.und3i2c0v3i2.dusterchat.home.chats.ChatsFragment;
+import practice.und3i2c0v3i2.dusterchat.home.contacts.ContactsFragment;
+import practice.und3i2c0v3i2.dusterchat.home.groups.GroupsFragment;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 

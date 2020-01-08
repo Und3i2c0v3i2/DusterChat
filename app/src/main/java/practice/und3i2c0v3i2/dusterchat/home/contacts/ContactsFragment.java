@@ -1,4 +1,4 @@
-package practice.und3i2c0v3i2.dusterchat;
+package practice.und3i2c0v3i2.dusterchat.home.contacts;
 
 
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import practice.und3i2c0v3i2.dusterchat.R;
 
 
 /**

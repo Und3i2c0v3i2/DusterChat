@@ -1,4 +1,4 @@
-package practice.und3i2c0v3i2.dusterchat;
+package practice.und3i2c0v3i2.dusterchat.profile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +31,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 
+import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityProfileBinding;
 import practice.und3i2c0v3i2.dusterchat.model.User;
 
@@ -42,9 +43,9 @@ import static practice.und3i2c0v3i2.dusterchat.Contract.PROFILE_IMAGES;
 import static practice.und3i2c0v3i2.dusterchat.Contract.PROFILE_IMG;
 import static practice.und3i2c0v3i2.dusterchat.Contract.STATUS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.TWITTER;
-import static practice.und3i2c0v3i2.dusterchat.Contract.UID;
+import static practice.und3i2c0v3i2.dusterchat.Contract.CURRENT_UID;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
-import static practice.und3i2c0v3i2.dusterchat.Contract.USERS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.WEB_PAGE;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -110,7 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void getProfileInfo() {
 
-        rootRef.child(USERS)
+        rootRef.child(NODE_USERS)
                 .child(user.getUid())
                 .addValueEventListener(userProfileEventListener);
 
@@ -192,7 +193,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             HashMap<String, String> profileInfo = new HashMap<>();
             profileInfo.put(PROFILE_IMG, user.getImgUrl());
-            profileInfo.put(UID, user.getUid());
+            profileInfo.put(CURRENT_UID, user.getUid());
             profileInfo.put(USERNAME, user.getUsername());
             profileInfo.put(STATUS, user.getStatus());
             profileInfo.put(PHONE, user.getPhone());
@@ -203,7 +204,7 @@ public class ProfileActivity extends AppCompatActivity {
             profileInfo.put(TWITTER, user.getTwitter());
 
 
-            rootRef.child(USERS)
+            rootRef.child(NODE_USERS)
                     .child(user.getUid())
                     .setValue(profileInfo)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -268,7 +269,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                 }
                                             });
 
-                                    rootRef.child(USERS)
+                                    rootRef.child(NODE_USERS)
                                             .child(user.getUid())
                                             .child(PROFILE_IMG)
                                             .setValue(user.getImgUrl())
@@ -350,7 +351,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if(userProfileEventListener != null) {
-            rootRef.child(USERS)
+            rootRef.child(NODE_USERS)
                     .child(user.getUid())
                     .removeEventListener(userProfileEventListener);
         }

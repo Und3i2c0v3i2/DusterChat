@@ -1,4 +1,4 @@
-package practice.und3i2c0v3i2.dusterchat;
+package practice.und3i2c0v3i2.dusterchat.home.groups;
 
 
 import android.content.Context;
@@ -25,9 +25,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import practice.und3i2c0v3i2.dusterchat.OnItemClickListener;
+import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.FragmentGroupsBinding;
 
-import static practice.und3i2c0v3i2.dusterchat.Contract.GROUPS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_GROUPS;
 
 
 /**
@@ -54,7 +56,7 @@ public class GroupsFragment extends Fragment {
 
 
         groupRef = FirebaseDatabase.getInstance()
-                .getReference().child(GROUPS);
+                .getReference().child(NODE_GROUPS);
 
         list = new ArrayList<>();
 

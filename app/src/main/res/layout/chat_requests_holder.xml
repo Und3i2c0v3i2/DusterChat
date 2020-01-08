@@ -7,8 +7,8 @@
 
     <data>
         <variable
-            name="user"
-            type="practice.und3i2c0v3i2.dusterchat.model.User" />
+            name="username"
+            type="String" />
 
     </data>
 
@@ -28,7 +28,7 @@
                 android:layout_height="70dp"
                 android:src="@drawable/profile_pic_holder_foreground"
                 app:civ_circle_background_color="@color/colorPrimary"
-                load_image="@{user.imgUrl}"/>
+                load_image="@drawable/profile"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                         android:layout_weight="1"
                         android:textSize="18dp"
                         android:textStyle="bold"
-                        tools:text="@{user.username}" />
+                        tools:text="@{username}" />
 
                     <ImageView
                         android:id="@+id/users_online_indicator"
@@ -64,13 +64,32 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/users_status"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    tools:text="@{user.status}" />
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_accepte_request"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        tools:text="Accept"
+                        android:layout_marginEnd="4dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_reject_request"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reject"
+                        android:layout_marginStart="4dp"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 

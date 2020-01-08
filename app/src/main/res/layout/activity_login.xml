@@ -7,7 +7,7 @@
 
         <variable
             name="loginHandler"
-            type="practice.und3i2c0v3i2.dusterchat.LoginActivity" />
+            type="practice.und3i2c0v3i2.dusterchat.register_login.LoginActivity" />
 
     </data>
 

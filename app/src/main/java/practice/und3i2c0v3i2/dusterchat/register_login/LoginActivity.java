@@ -1,4 +1,4 @@
-package practice.und3i2c0v3i2.dusterchat;
+package practice.und3i2c0v3i2.dusterchat.register_login;
 
 
 import android.app.ProgressDialog;
@@ -16,7 +16,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityLoginBinding;
+import practice.und3i2c0v3i2.dusterchat.home.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
 

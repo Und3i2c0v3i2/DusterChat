@@ -1,4 +1,4 @@
-package practice.und3i2c0v3i2.dusterchat;
+package practice.und3i2c0v3i2.dusterchat.home;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -27,12 +27,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Objects;
 
 
+import practice.und3i2c0v3i2.dusterchat.find_friends.FindFriendsActivity;
+import practice.und3i2c0v3i2.dusterchat.home.groups.GroupChatActivity;
+import practice.und3i2c0v3i2.dusterchat.register_login.LoginActivity;
+import practice.und3i2c0v3i2.dusterchat.OnItemClickListener;
+import practice.und3i2c0v3i2.dusterchat.profile.ProfileActivity;
+import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityHomeBinding;
 
-import static practice.und3i2c0v3i2.dusterchat.Contract.GROUPS;
-import static practice.und3i2c0v3i2.dusterchat.Contract.UID;
+import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_GROUPS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
-import static practice.und3i2c0v3i2.dusterchat.Contract.USERS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 
 
 public class HomeActivity extends AppCompatActivity implements OnItemClickListener {
@@ -83,7 +88,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
 
         uId = auth.getCurrentUser().getUid();
 
-        rootRef.child(USERS)
+        rootRef.child(NODE_USERS)
                 .child(uId)
                 .addValueEventListener(verifyUserEventListener);
     }
@@ -183,7 +188,7 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
 
     private void createNewGroup(final String groupName) {
 
-        rootRef.child(GROUPS)
+        rootRef.child(NODE_GROUPS)
                 .child(groupName)
                 .setValue("")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -231,9 +236,11 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
     protected void onStop() {
         super.onStop();
         if(verifyUserEventListener != null) {
-            rootRef.child(USERS)
-                    .child(uId)
-                    .removeEventListener(verifyUserEventListener);
+            if(uId != null) {
+                rootRef.child(NODE_USERS)
+                        .child(uId)
+                        .removeEventListener(verifyUserEventListener);
+            }
         }
     }
 

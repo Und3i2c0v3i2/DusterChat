@@ -8,7 +8,7 @@
 
         <variable
             name="profileHandler"
-            type="practice.und3i2c0v3i2.dusterchat.ProfileActivity" />
+            type="practice.und3i2c0v3i2.dusterchat.profile.ProfileActivity" />
     </data>
 
     <LinearLayout

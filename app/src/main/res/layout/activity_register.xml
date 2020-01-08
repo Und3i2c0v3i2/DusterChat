@@ -6,7 +6,7 @@
 
         <variable
             name="registerHandler"
-            type="practice.und3i2c0v3i2.dusterchat.RegisterActivity" />
+            type="practice.und3i2c0v3i2.dusterchat.register_login.RegisterActivity" />
 
     </data>
 
