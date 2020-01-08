@@ -154,7 +154,10 @@ public class ChatFriendProfileFragment extends Fragment {
                 .addValueEventListener(receiverReceivedReq);
 
         contactsRef.child(receiverUid)
-                .addValueEventListener(contactsListener);
+                .addValueEventListener(receiverContactsListener);
+
+        contactsRef.child(senderUid)
+                .addValueEventListener(senderContactsListener);
     }
 
 
@@ -172,7 +175,7 @@ public class ChatFriendProfileFragment extends Fragment {
         } else if (currentReqStatus.equals(User.ConnStatus.RECEIVED_REQ)) {
             cancelChatRequest();
         } else if (currentReqStatus.equals(User.ConnStatus.ACCEPTED_REQ)) {
-//            acceptChatRequest();
+            removeChatRequest();
         }
     }
 
@@ -314,6 +317,35 @@ public class ChatFriendProfileFragment extends Fragment {
 
     }
 
+    public void removeChatRequest() {
+
+        contactsRef
+                .child(senderUid)
+                .child(receiverUid)
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            contactsRef.child(receiverUid)
+                                    .child(senderUid)
+                                    .removeValue()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                binding.btnSendChatRequest.setEnabled(true);
+                                                binding.btnSendChatRequest.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                                                binding.btnSendChatRequest.setText((getResources().getString(R.string.btn_send_chat_request)));
+                                                currentReqStatus = User.ConnStatus.NEW_REQ;
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+    }
+
 
     private ValueEventListener friendProfileEventListener = new ValueEventListener() {
         @Override
@@ -373,8 +405,10 @@ public class ChatFriendProfileFragment extends Fragment {
                     binding.btnSendChatRequest.setText((getResources().getString(R.string.btn_cancel_chat_request)));
                 }
             } else {
-                binding.btnSendChatRequest.setText((getResources().getString(R.string.btn_send_chat_request)));
-                currentReqStatus = User.ConnStatus.NEW_REQ;
+                if(!User.ConnStatus.ACCEPTED_REQ.equals(currentReqStatus)) {
+                    binding.btnSendChatRequest.setText((getResources().getString(R.string.btn_send_chat_request)));
+                    currentReqStatus = User.ConnStatus.NEW_REQ;
+                }
             }
         }
 
@@ -395,12 +429,16 @@ public class ChatFriendProfileFragment extends Fragment {
 
 
                 if (reqStatus.equals(User.ConnStatus.RECEIVED_REQ)) {
+                    binding.btnSendChatRequest.setEnabled(false);
+                    binding.btnSendChatRequest.setTextColor(getResources().getColor(R.color.colorGrey));
                     binding.btnAcceptChatRequest.setVisibility(View.VISIBLE);
                     binding.btnRejectChatRequest.setVisibility(View.VISIBLE);
                 }
             } else {
                 binding.btnAcceptChatRequest.setVisibility(View.INVISIBLE);
                 binding.btnRejectChatRequest.setVisibility(View.INVISIBLE);
+                binding.btnSendChatRequest.setEnabled(true);
+                binding.btnSendChatRequest.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 currentReqStatus = User.ConnStatus.NEW_REQ;
 
             }
@@ -412,14 +450,36 @@ public class ChatFriendProfileFragment extends Fragment {
         }
     };
 
-    private ValueEventListener contactsListener = new ValueEventListener() {
+    private ValueEventListener receiverContactsListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
             if (dataSnapshot.hasChild(senderUid)) {
                 currentReqStatus = User.ConnStatus.ACCEPTED_REQ;
                 binding.btnSendChatRequest.setText("Remove from contacts");
+                binding.btnAcceptChatRequest.setVisibility(View.INVISIBLE);
+                binding.btnRejectChatRequest.setVisibility(View.INVISIBLE);
 
+            } else {
+                currentReqStatus = User.ConnStatus.NEW_REQ;
+                binding.btnSendChatRequest.setText(getResources().getString(R.string.btn_send_chat_request));
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
+
+    private ValueEventListener senderContactsListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            if (dataSnapshot.hasChild(receiverUid)) {
+                binding.btnSendChatRequest.setText("Remove from contacts");
+                binding.btnAcceptChatRequest.setVisibility(View.INVISIBLE);
+                binding.btnRejectChatRequest.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -463,9 +523,14 @@ public class ChatFriendProfileFragment extends Fragment {
                     .removeEventListener(friendProfileEventListener);
         }
 
-        if (contactsListener != null) {
+        if (receiverContactsListener != null) {
             contactsRef.child(receiverUid)
-                    .removeEventListener(contactsListener);
+                    .removeEventListener(receiverContactsListener);
+        }
+
+        if (senderContactsListener != null) {
+            contactsRef.child(senderUid)
+                    .removeEventListener(senderContactsListener);
         }
     }
 }
