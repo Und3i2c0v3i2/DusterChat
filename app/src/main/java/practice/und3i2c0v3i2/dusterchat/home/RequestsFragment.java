@@ -1,17 +1,16 @@
-package practice.und3i2c0v3i2.dusterchat.home.contacts;
+package practice.und3i2c0v3i2.dusterchat.home;
 
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -23,8 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import practice.und3i2c0v3i2.dusterchat.R;
-import practice.und3i2c0v3i2.dusterchat.databinding.ContactsHolderBinding;
-import practice.und3i2c0v3i2.dusterchat.databinding.FragmentContactsBinding;
+import practice.und3i2c0v3i2.dusterchat.databinding.FragmentRequestsBinding;
+import practice.und3i2c0v3i2.dusterchat.databinding.ReqHolderBinding;
 import practice.und3i2c0v3i2.dusterchat.model.User;
 
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_CONTACTS;
@@ -37,19 +36,19 @@ import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ContactsFragment extends Fragment {
+public class RequestsFragment extends Fragment {
 
 
-    private FragmentContactsBinding contactsBinding;
+    private FragmentRequestsBinding requestsBinding;
     private DatabaseReference contactsRef;
     private DatabaseReference usersRef;
     private FirebaseAuth auth;
     private String currentUserId;
 
-    private FirebaseRecyclerAdapter<User, ContactsFragment.ViewHolder> adapter;
+    private FirebaseRecyclerAdapter<User, RequestsFragment.ViewHolder> adapter;
 
 
-    public ContactsFragment() {
+    public RequestsFragment() {
         // Required empty public constructor
     }
 
@@ -57,8 +56,8 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        contactsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contacts, container, false);
-        contactsBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        requestsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_requests, container, false);
+        requestsBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         auth = FirebaseAuth.getInstance();
         currentUserId = auth.getCurrentUser().getUid();
@@ -73,7 +72,7 @@ public class ContactsFragment extends Fragment {
                 .getReference()
                 .child(NODE_USERS);
 
-        return contactsBinding.getRoot();
+        return requestsBinding.getRoot();
     }
 
     @Override
@@ -122,13 +121,13 @@ public class ContactsFragment extends Fragment {
                     @Override
                     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-                        ContactsHolderBinding binding = DataBindingUtil.inflate(inflater, R.layout.contacts_holder, parent, false);
+                        ReqHolderBinding binding = DataBindingUtil.inflate(inflater, R.layout.req_holder, parent, false);
 
                         return new ViewHolder(binding);
                     }
                 };
 
-        contactsBinding.recyclerView.setAdapter(adapter);
+        requestsBinding.recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
 
@@ -137,14 +136,14 @@ public class ContactsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         adapter.stopListening();
-        contactsBinding.recyclerView.setLayoutManager(null);
+        requestsBinding.recyclerView.setLayoutManager(null);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ContactsHolderBinding binding;
+        private ReqHolderBinding binding;
 
-        public ViewHolder(@NonNull ContactsHolderBinding binding) {
+        public ViewHolder(@NonNull ReqHolderBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

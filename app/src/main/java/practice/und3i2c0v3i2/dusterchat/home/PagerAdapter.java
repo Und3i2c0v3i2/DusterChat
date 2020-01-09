@@ -36,6 +36,10 @@ public class PagerAdapter extends FragmentPagerAdapter {
                 fragment = new ContactsFragment();
                 break;
 
+            case 3:
+                fragment = new RequestsFragment();
+                break;
+
         }
 
         return fragment;
@@ -43,7 +47,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
 
@@ -65,6 +69,11 @@ public class PagerAdapter extends FragmentPagerAdapter {
             case 2:
                 title = "Contacts";
                 break;
+
+            case 3:
+                title = "Requests";
+                break;
+
 
         }
 
