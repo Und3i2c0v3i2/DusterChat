@@ -26,10 +26,12 @@ import practice.und3i2c0v3i2.dusterchat.databinding.FragmentRequestsBinding;
 import practice.und3i2c0v3i2.dusterchat.databinding.ReqHolderBinding;
 import practice.und3i2c0v3i2.dusterchat.model.User;
 
+import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_CHAT_REQUESTS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_CONTACTS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.PROFILE_IMG;
 import static practice.und3i2c0v3i2.dusterchat.Contract.STATUS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.STATUS_RECEIVED;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
 
 
@@ -40,7 +42,7 @@ public class RequestsFragment extends Fragment {
 
 
     private FragmentRequestsBinding requestsBinding;
-    private DatabaseReference contactsRef;
+    private DatabaseReference chatReqRef;
     private DatabaseReference usersRef;
     private FirebaseAuth auth;
     private String currentUserId;
@@ -61,10 +63,11 @@ public class RequestsFragment extends Fragment {
 
         auth = FirebaseAuth.getInstance();
         currentUserId = auth.getCurrentUser().getUid();
-        contactsRef = FirebaseDatabase
+        chatReqRef = FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child(NODE_CONTACTS)
+                .child(NODE_CHAT_REQUESTS)
+                .child(STATUS_RECEIVED)
                 .child(currentUserId);
 
         usersRef = FirebaseDatabase
@@ -81,7 +84,7 @@ public class RequestsFragment extends Fragment {
 
         FirebaseRecyclerOptions options =
                 new FirebaseRecyclerOptions.Builder<User>()
-                        .setQuery(contactsRef, User.class)
+                        .setQuery(chatReqRef, User.class)
                         .build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
