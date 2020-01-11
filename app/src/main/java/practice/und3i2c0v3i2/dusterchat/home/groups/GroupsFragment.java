@@ -119,6 +119,10 @@ public class GroupsFragment extends Fragment {
             groupRef.removeEventListener(groupsEventListener);
         }
 
+        if(adapter != null) {
+            adapter = null;
+        }
+
     }
 
 }

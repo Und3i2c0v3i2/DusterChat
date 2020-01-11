@@ -16,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import practice.und3i2c0v3i2.dusterchat.OnFragmentInteractionListener;
+import practice.und3i2c0v3i2.dusterchat.OnItemClickListener;
 import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityChatProfileBinding;
 import practice.und3i2c0v3i2.dusterchat.model.User;
@@ -26,7 +27,7 @@ import static practice.und3i2c0v3i2.dusterchat.Contract.STATUS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 
-public class ChatProfileActivity extends AppCompatActivity implements OnFragmentInteractionListener {
+public class ChatProfileActivity extends AppCompatActivity {
 
 
     private ActivityChatProfileBinding binding;
@@ -130,8 +131,8 @@ public class ChatProfileActivity extends AppCompatActivity implements OnFragment
 
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
 
         if (friendProfileEventListener != null) {
             rootRef.child(receiverUserId)
@@ -140,8 +141,4 @@ public class ChatProfileActivity extends AppCompatActivity implements OnFragment
 
     }
 
-    @Override
-    public void onFragmentInteraction(int action) {
-
-    }
 }

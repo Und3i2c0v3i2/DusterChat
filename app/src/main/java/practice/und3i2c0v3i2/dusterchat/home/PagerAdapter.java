@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import practice.und3i2c0v3i2.dusterchat.home.chats.ChatsFragment;
 import practice.und3i2c0v3i2.dusterchat.home.contacts.ContactsFragment;
 import practice.und3i2c0v3i2.dusterchat.home.groups.GroupsFragment;
+import practice.und3i2c0v3i2.dusterchat.home.requests.RequestsFragment;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 

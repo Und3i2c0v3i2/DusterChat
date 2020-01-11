@@ -11,6 +11,10 @@
             name="user"
             type="practice.und3i2c0v3i2.dusterchat.model.User" />
 
+        <variable
+            name="reqHandler"
+            type="practice.und3i2c0v3i2.dusterchat.home.requests.RequestsFragment" />
+
     </data>
 
 

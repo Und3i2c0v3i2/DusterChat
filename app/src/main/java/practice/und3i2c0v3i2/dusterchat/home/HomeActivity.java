@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,12 +30,15 @@ import java.util.Objects;
 
 import practice.und3i2c0v3i2.dusterchat.find_friends.FindFriendsActivity;
 import practice.und3i2c0v3i2.dusterchat.home.groups.GroupChatActivity;
+import practice.und3i2c0v3i2.dusterchat.profile.ChatFriendProfileFragment;
+import practice.und3i2c0v3i2.dusterchat.profile.ChatProfileActivity;
 import practice.und3i2c0v3i2.dusterchat.register_login.LoginActivity;
 import practice.und3i2c0v3i2.dusterchat.OnItemClickListener;
 import practice.und3i2c0v3i2.dusterchat.profile.ProfileActivity;
 import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityHomeBinding;
 
+import static practice.und3i2c0v3i2.dusterchat.Contract.FRIEND_ID;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_GROUPS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
@@ -212,6 +216,13 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
                 groupName = bundle.getString(BUNDLE_GROUP_NAME);
                 openGroupChatPage(groupName);
                 break;
+
+            case ACTION_OPEN_PROFILE:
+                String id = bundle.getString(FRIEND_ID);
+                Intent profileIntent = new Intent(this, ChatProfileActivity.class);
+                profileIntent.putExtra(FRIEND_ID, id);
+                startActivity(profileIntent);
+                break;
         }
     }
 
@@ -235,13 +246,14 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     protected void onStop() {
         super.onStop();
-        if(verifyUserEventListener != null) {
-            if(uId != null) {
+        if (verifyUserEventListener != null) {
+            if (uId != null) {
                 rootRef.child(NODE_USERS)
                         .child(uId)
                         .removeEventListener(verifyUserEventListener);
             }
         }
     }
+
 
 }

@@ -30,7 +30,8 @@
                 android:background="@color/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:tabTextColor="@color/colorWhite"
-                app:tabIndicatorColor="@color/colorPrimaryDark"/>
+                app:tabIndicatorColor="@color/colorPrimaryDark"
+                app:tabMode="scrollable"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 

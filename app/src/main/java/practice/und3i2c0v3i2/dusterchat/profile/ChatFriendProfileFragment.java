@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import practice.und3i2c0v3i2.dusterchat.OnFragmentInteractionListener;
+import practice.und3i2c0v3i2.dusterchat.OnItemClickListener;
 import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.FragmentChatFriendProfileBinding;
 import practice.und3i2c0v3i2.dusterchat.model.User;
@@ -40,12 +42,12 @@ import static practice.und3i2c0v3i2.dusterchat.Contract.CURRENT_UID;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.WEB_PAGE;
+import static practice.und3i2c0v3i2.dusterchat.model.User.ConnStatus.ACCEPTED_REQ;
 
 
 public class ChatFriendProfileFragment extends Fragment {
 
     private FragmentChatFriendProfileBinding binding;
-    private OnFragmentInteractionListener listener;
 
     private DatabaseReference usersRef;
     private DatabaseReference contactsRef;
@@ -61,6 +63,7 @@ public class ChatFriendProfileFragment extends Fragment {
     private User user;
 
     private String currentReqStatus;
+    private String currentContactsStatus;
 
 
     public ChatFriendProfileFragment() {
@@ -105,7 +108,7 @@ public class ChatFriendProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding.setUser(user);
 
-        if(User.ConnStatus.ACCEPTED_REQ.equals(currentReqStatus)) {
+        if(ACCEPTED_REQ.equals(currentContactsStatus)) {
             binding.btnSendChatRequest.setText("Remove from contacts");
         } else {
             currentReqStatus = User.ConnStatus.NEW_REQ;
@@ -170,11 +173,12 @@ public class ChatFriendProfileFragment extends Fragment {
 
     public void handleChatRequest() {
 
-        if (currentReqStatus.equals(User.ConnStatus.NEW_REQ)) {
+        if (currentReqStatus.equals(User.ConnStatus.NEW_REQ) && !ACCEPTED_REQ.equals(currentContactsStatus)) {
             sendChatRequest();
         } else if (currentReqStatus.equals(User.ConnStatus.RECEIVED_REQ)) {
             cancelChatRequest();
-        } else if (currentReqStatus.equals(User.ConnStatus.ACCEPTED_REQ)) {
+        }
+        else if (ACCEPTED_REQ.equals(currentContactsStatus)) {
             removeChatRequest();
         }
     }
@@ -274,7 +278,8 @@ public class ChatFriendProfileFragment extends Fragment {
                                                                                         binding.btnAcceptChatRequest.setVisibility(View.INVISIBLE);
                                                                                         binding.btnRejectChatRequest.setVisibility(View.INVISIBLE);
                                                                                         binding.btnSendChatRequest.setText("Remove from contacts");
-                                                                                        currentReqStatus = User.ConnStatus.ACCEPTED_REQ;
+                                                                                        currentReqStatus = ACCEPTED_REQ;
+                                                                                        currentContactsStatus = ACCEPTED_REQ;
                                                                                     }
                                                                                 }
                                                                             });
@@ -337,7 +342,7 @@ public class ChatFriendProfileFragment extends Fragment {
                                                 binding.btnSendChatRequest.setEnabled(true);
                                                 binding.btnSendChatRequest.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                                                 binding.btnSendChatRequest.setText((getResources().getString(R.string.btn_send_chat_request)));
-                                                currentReqStatus = User.ConnStatus.NEW_REQ;
+                                                currentContactsStatus = User.ConnStatus.NEW_REQ;
                                             }
                                         }
                                     });
@@ -395,18 +400,17 @@ public class ChatFriendProfileFragment extends Fragment {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             if (dataSnapshot.hasChild(senderUid)) {
 
-                String reqStatus = dataSnapshot
+                currentReqStatus = dataSnapshot
                         .child(senderUid)
                         .child(REQ_STATUS)
                         .getValue().toString();
 
-
-                if (reqStatus.equals(User.ConnStatus.RECEIVED_REQ)) {
-                    binding.btnSendChatRequest.setText((getResources().getString(R.string.btn_cancel_chat_request)));
+               if (currentReqStatus.equals(User.ConnStatus.RECEIVED_REQ)) {
+                    binding.btnSendChatRequest.setText(getResources().getString(R.string.btn_cancel_chat_request));
                 }
             } else {
-                if(!User.ConnStatus.ACCEPTED_REQ.equals(currentReqStatus)) {
-                    binding.btnSendChatRequest.setText((getResources().getString(R.string.btn_send_chat_request)));
+                if(!ACCEPTED_REQ.equals(currentContactsStatus)) {
+                    binding.btnSendChatRequest.setText(getResources().getString(R.string.btn_send_chat_request));
                     currentReqStatus = User.ConnStatus.NEW_REQ;
                 }
             }
@@ -455,14 +459,11 @@ public class ChatFriendProfileFragment extends Fragment {
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
             if (dataSnapshot.hasChild(senderUid)) {
-                currentReqStatus = User.ConnStatus.ACCEPTED_REQ;
+//                currentReqStatus = ACCEPTED_REQ;
+                currentContactsStatus = ACCEPTED_REQ;
                 binding.btnSendChatRequest.setText("Remove from contacts");
                 binding.btnAcceptChatRequest.setVisibility(View.INVISIBLE);
                 binding.btnRejectChatRequest.setVisibility(View.INVISIBLE);
-
-            } else {
-                currentReqStatus = User.ConnStatus.NEW_REQ;
-                binding.btnSendChatRequest.setText(getResources().getString(R.string.btn_send_chat_request));
             }
         }
 
@@ -490,21 +491,10 @@ public class ChatFriendProfileFragment extends Fragment {
     };
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
 
         if (receiverReceivedReq != null) {
             chatReqRef.child(STATUS_RECEIVED)
@@ -533,4 +523,5 @@ public class ChatFriendProfileFragment extends Fragment {
                     .removeEventListener(senderContactsListener);
         }
     }
+
 }
