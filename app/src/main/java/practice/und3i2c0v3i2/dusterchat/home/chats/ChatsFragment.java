@@ -75,6 +75,7 @@ public class ChatsFragment extends Fragment {
                 .child(NODE_CONTACTS)
                 .child(currentUid);
 
+
         usersRef = FirebaseDatabase
                 .getInstance()
                 .getReference()

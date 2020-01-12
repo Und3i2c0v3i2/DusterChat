@@ -77,18 +77,14 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
         currentUser = auth.getCurrentUser();
         rootRef = FirebaseDatabase.getInstance().getReference();
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
         if (currentUser == null) {
             sendUserToLogin();
         } else {
             verifyUser();
         }
+
     }
+
 
     private void verifyUser() {
 

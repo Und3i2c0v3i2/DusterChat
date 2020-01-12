@@ -108,6 +108,7 @@ public class ChatsActivity extends AppCompatActivity implements ChatListener {
                         Message message = dataSnapshot.getValue(Message.class);
                         list.add(message);
                         adapter.notifyDataSetChanged();
+                        binding.recyclerView.smoothScrollToPosition(list.size()-1);
                     }
 
                     @Override
@@ -166,7 +167,6 @@ public class ChatsActivity extends AppCompatActivity implements ChatListener {
         }
 
         binding.chatLayoutSendMsg.chatSendMsgInput.setText("");
-//        binding.chatLayoutDisplayMsg.chatScrollView.fullScroll(View.FOCUS_DOWN);
     }
 
     @Override

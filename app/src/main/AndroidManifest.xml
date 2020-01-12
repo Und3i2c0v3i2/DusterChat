@@ -13,16 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".home.chats.ChatsActivity"></activity>
+        <activity android:name=".home.chats.ChatsActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity android:name=".profile.ChatProfileActivity" />
         <activity android:name=".find_friends.FindFriendsActivity" />
-        <activity android:name=".register_login.PhoneLoginActivity" />
+        <activity android:name=".register_login.PhoneLoginActivity"/>
         <activity android:name=".home.groups.GroupChatActivity" />
         <activity android:name=".profile.ProfileActivity" />
-        <activity android:name=".register_login.RegisterActivity" />
+        <activity android:name=".register_login.RegisterActivity"/>
         <activity
             android:name=".register_login.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"/>
         <activity android:name=".home.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
