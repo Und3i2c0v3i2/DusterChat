@@ -6,6 +6,7 @@ public interface Contract {
     public static final String NODE_GROUPS = "groups";
     public static final String NODE_CONTACTS = "contacts";
     public static final String NODE_CHAT_REQUESTS = "chat_requests";
+    public static final String NODE_CHAT_MESSAGES = "chat_messages";
 
     public static final String PROFILE_IMAGES = "profile_images";
     public static final String FRIEND_ID = "friend_id";
@@ -36,5 +37,7 @@ public interface Contract {
     /* chat */
     public static final String MESSAGE = "message";
     public static final String TIMESTAMP = "timestamp";
+    public static final String TYPE = "type";
+    public static final String FROM = "from";
 
 }

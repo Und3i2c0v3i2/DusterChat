@@ -15,8 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import practice.und3i2c0v3i2.dusterchat.OnFragmentInteractionListener;
-import practice.und3i2c0v3i2.dusterchat.OnItemClickListener;
 import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ActivityChatProfileBinding;
 import practice.und3i2c0v3i2.dusterchat.model.User;

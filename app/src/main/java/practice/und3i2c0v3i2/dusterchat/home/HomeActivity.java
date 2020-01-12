@@ -29,6 +29,7 @@ import java.util.Objects;
 
 
 import practice.und3i2c0v3i2.dusterchat.find_friends.FindFriendsActivity;
+import practice.und3i2c0v3i2.dusterchat.home.chats.ChatsActivity;
 import practice.und3i2c0v3i2.dusterchat.home.groups.GroupChatActivity;
 import practice.und3i2c0v3i2.dusterchat.profile.ChatFriendProfileFragment;
 import practice.und3i2c0v3i2.dusterchat.profile.ChatProfileActivity;
@@ -40,6 +41,7 @@ import practice.und3i2c0v3i2.dusterchat.databinding.ActivityHomeBinding;
 
 import static practice.und3i2c0v3i2.dusterchat.Contract.FRIEND_ID;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_GROUPS;
+import static practice.und3i2c0v3i2.dusterchat.Contract.PROFILE_IMG;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 
@@ -218,10 +220,21 @@ public class HomeActivity extends AppCompatActivity implements OnItemClickListen
                 break;
 
             case ACTION_OPEN_PROFILE:
-                String id = bundle.getString(FRIEND_ID);
+                String profile_id = bundle.getString(FRIEND_ID);
                 Intent profileIntent = new Intent(this, ChatProfileActivity.class);
-                profileIntent.putExtra(FRIEND_ID, id);
+                profileIntent.putExtra(FRIEND_ID, profile_id);
                 startActivity(profileIntent);
+                break;
+
+            case ACTION_PRIVATE_CHAT:
+                String chat_id = bundle.getString(FRIEND_ID);
+                String chat_username = bundle.getString(USERNAME);
+                String chat_img = bundle.getString(PROFILE_IMG);
+                Intent chatIntent = new Intent(this, ChatsActivity.class);
+                chatIntent.putExtra(FRIEND_ID, chat_id);
+                chatIntent.putExtra(USERNAME, chat_username);
+                chatIntent.putExtra(PROFILE_IMG, chat_img);
+                startActivity(chatIntent);
                 break;
         }
     }

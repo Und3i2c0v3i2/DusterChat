@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="msg"
+            type="practice.und3i2c0v3i2.dusterchat.model.Message" />
+
+        <variable
+            name="user"
+            type="practice.und3i2c0v3i2.dusterchat.model.User" />
+    </data>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <LinearLayout
+            android:id="@+id/receiver_linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentStart="true">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/sender_profile_img"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/profile_pic_holder"
+                load_image="@{user.imgUrl}"/>
+
+            <TextView
+                android:id="@+id/receiver_msg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/receiver_msg_layout"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textSize="16sp"
+                android:text="@{msg.message}"
+                android:gravity="center|start"
+                tools:text="receiver message"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sender_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@+id/receiver_linear_layout"
+            android:gravity="center|end">
+
+            <TextView
+                android:id="@+id/sender_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/sender_msg_layout"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textSize="16sp"
+                android:text="@{msg.message}"
+                android:gravity="center"
+                tools:text="sender message"/>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</layout>

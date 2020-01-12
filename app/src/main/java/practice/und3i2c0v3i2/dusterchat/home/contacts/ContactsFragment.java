@@ -1,6 +1,7 @@
 package practice.und3i2c0v3i2.dusterchat.home.contacts;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,16 +23,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import practice.und3i2c0v3i2.dusterchat.OnItemClickListener;
 import practice.und3i2c0v3i2.dusterchat.R;
 import practice.und3i2c0v3i2.dusterchat.databinding.ContactsHolderBinding;
 import practice.und3i2c0v3i2.dusterchat.databinding.FragmentContactsBinding;
 import practice.und3i2c0v3i2.dusterchat.model.User;
 
+import static practice.und3i2c0v3i2.dusterchat.Contract.FRIEND_ID;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_CONTACTS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.NODE_USERS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.PROFILE_IMG;
 import static practice.und3i2c0v3i2.dusterchat.Contract.STATUS;
 import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
+import static practice.und3i2c0v3i2.dusterchat.OnItemClickListener.ACTION_OPEN_PROFILE;
+import static practice.und3i2c0v3i2.dusterchat.OnItemClickListener.ACTION_PRIVATE_CHAT;
+import static practice.und3i2c0v3i2.dusterchat.OnItemClickListener.CLICK_ACTION;
 
 
 /**
@@ -39,6 +45,7 @@ import static practice.und3i2c0v3i2.dusterchat.Contract.USERNAME;
  */
 public class ContactsFragment extends Fragment {
 
+    private OnItemClickListener listener;
 
     private FragmentContactsBinding contactsBinding;
     private DatabaseReference contactsRef;
@@ -109,6 +116,16 @@ public class ContactsFragment extends Fragment {
 
                                         holder.binding.setUser(user);
 
+                                        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Bundle bundle = new Bundle();
+                                                bundle.putInt(CLICK_ACTION, ACTION_OPEN_PROFILE);
+                                                bundle.putString(FRIEND_ID, userID);
+                                                listener.onItemClick(bundle);
+                                            }
+                                        });
+
                                     }
 
                                     @Override
@@ -134,10 +151,19 @@ public class ContactsFragment extends Fragment {
 
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof OnItemClickListener) {
+            listener = (OnItemClickListener) context;
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         adapter.stopListening();
         contactsBinding.recyclerView.setLayoutManager(null);
+        listener = null;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
